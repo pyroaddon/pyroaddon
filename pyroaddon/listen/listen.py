@@ -21,6 +21,7 @@ along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 import asyncio
 import functools
 import pyrogram
+import typing
 
 from ..utils import patch, patchable
 
@@ -54,6 +55,13 @@ class Client():
         })
         return await asyncio.wait_for(future, timeout)
     
+    @patchable
+    async def get_all_groups(self) -> typing.List[pyrogram.types.Chat]:
+        chats = []
+        for chat in (await self.send( pyrogram.raw.functions.messages.GetAllChats(except_ids=[0]))).chats:
+            if any(getattr(chat, i, False) for i in ('gigagroup', 'megagroup')):
+                chats.append(Chat(client = self, id=pyrogram.utils.MAX_CHANNEL_ID - chat.id, type=chat.gigagroup))
+        return chats
     @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
         request = await self.send_message(chat_id, text, *args, **kwargs)
