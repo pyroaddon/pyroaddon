@@ -7,19 +7,19 @@ with open("README.md", "r") as fp:
 with open('requirements.txt') as fp:
     requirements = [line.strip() for line in fp]
 
-with open('pyromod/__init__.py') as fp:
+with open('pyroaddon/__init__.py') as fp:
     version = re.search('__version__ = "(.+?)"', fp.read())[1]
 
 
 setuptools.setup(
-    name="pyromod",
+    name="pyroaddon",
     version=version,
-    author="Cezar H.",
+    author="pyroaddon",
     license="LGPLv3+",
     description="A monkeypatcher add-on for Pyrogram",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/usernein/pyromod",
+    url="https://github.com/pyroaddon/pyroaddon",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
