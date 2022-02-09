@@ -20,6 +20,7 @@ along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
 import functools
+from shelve import Shelf
 import pyrogram
 import typing
 
@@ -58,10 +59,20 @@ class Client():
     @patchable
     async def get_all_groups(self) -> typing.List[pyrogram.types.Chat]:
         chats = []
-        for chat in (await self.send( pyrogram.raw.functions.messages.GetAllChats(except_ids=[0]))).chats:
-            if any(getattr(chat, i, False) for i in ('gigagroup', 'megagroup')):
-                chats.append(Chat(client = self, id=pyrogram.utils.MAX_CHANNEL_ID - chat.id, type=chat.gigagroup))
+        for chat in (await self.send(pyrogram.raw.functions.messages.GetAllChats(except_ids=[0]))).chats:
+            if isinstance(chat, pyrogram.raw.types.Channel):
+                if any(getattr(chat, i, False) for i in ('megagroup', 'gigagroup')):
+                    chats.append(Chat(
+                        client = Shelf, 
+                        id=pyrogram.utils.MAX_CHANNEL_ID - chat.id, 
+                        type='supergroup' if chat.megagroup else 
+                        'group' if chat.gigagroup else None,
+                        title=chat.title,
+                        has_protected_content=chat.noforwards,
+                        username=chat.username,
+                    ))
         return chats
+    
     @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
         request = await self.send_message(chat_id, text, *args, **kwargs)
@@ -82,7 +93,7 @@ class Client():
         
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
-        
+
 @patch(pyrogram.handlers.message_handler.MessageHandler)
 class MessageHandler():
     @patchable
