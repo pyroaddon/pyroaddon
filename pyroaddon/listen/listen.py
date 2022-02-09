@@ -32,7 +32,6 @@ class ListenerCanceled(Exception):
     pass
 pyrogram.errors.ListenerCanceled = ListenerCanceled
 
-@patch(pyrogram.client.Client)
 class Client():
     @patchable
     def __init__(self, *args, **kwargs):
@@ -93,6 +92,10 @@ class Client():
         
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
+pyrogram.sync.async_to_sync(Client, 'get_all_groups')
+pyrogram.sync.async_to_sync(Client, 'ask')
+pyrogram.sync.async_to_sync(Client, 'listen')
+patch(pyrogram.client.Client)(Client)
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)
 class MessageHandler():
