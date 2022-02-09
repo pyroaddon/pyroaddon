@@ -33,3 +33,10 @@ async def ttl_message(_, __, m):
         return True
     return False
 pyrogram.filters.ttl_message = ttl_message
+
+@pyrogram.filters.create
+async def video_sticker(_, __, m: pyrogram.types.Message):
+    if await pyrogram.filters.sticker(__, m):
+        return m.sticker.is_video
+    return False
+pyrogram.filters.video_sticker = video_sticker
