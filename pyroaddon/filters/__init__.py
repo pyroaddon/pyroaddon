@@ -18,4 +18,4 @@ You should have received a copy of the GNU General Public License
 along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from .filters import dice
+from .filters import *
