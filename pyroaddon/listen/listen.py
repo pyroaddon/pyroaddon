@@ -56,7 +56,7 @@ class Client():
     
     @patchable
     async def get_all_groups(self) -> typing.List[pyrogram.types.Chat]:
-        chats = []
+        chats = pyrogram.types.List()
         for chat in (await self.send(pyrogram.raw.functions.messages.GetAllChats(except_ids=[0]))).chats:
             if isinstance(chat, pyrogram.raw.types.Channel):
                 if any(getattr(chat, i, False) for i in ('megagroup', 'gigagroup')):
@@ -70,6 +70,16 @@ class Client():
                         username=chat.username,
                     ))
         return chats
+    
+    @patchable
+    async def get_administrators(self, chat_id: typing.Union[int, str], has_creator: bool=False) -> typing.List[int]:
+        administrators = pyrogram.types.List()
+        for administrator in await self.get_chat_members(chat_id, filter="administrators"):
+            if has_creator:
+                administrators.add(administrator)
+            elif administrator.status != 'creator':
+                administrators.add(administrator)
+        return administrators
     
     @patchable
     async def ask(
@@ -100,6 +110,7 @@ class Client():
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
 pyrogram.sync.async_to_sync(Client, 'get_all_groups')
+pyrogram.sync.async_to_sync(Client, 'get_administrators')
 pyrogram.sync.async_to_sync(Client, 'ask')
 pyrogram.sync.async_to_sync(Client, 'listen')
 patch(pyrogram.client.Client)(Client)
