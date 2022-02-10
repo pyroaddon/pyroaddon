@@ -73,6 +73,16 @@ class Client():
         return chats
     
     @patchable
+    async def get_administrators(self, chat_id: typing.Union[int, str], has_creator: bool=False) -> typing.List[int]:
+        administrators = pyrogram.types.List()
+        for administrator in await self.get_chat_members(chat_id, filter="administrators"):
+            if has_creator:
+                administrators.add(administrator)
+            elif administrator.status != 'creator':
+                administrators.add(administrator)
+        return administrators
+
+    @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
         request = await self.send_message(chat_id, text, *args, **kwargs)
         response = await self.listen(chat_id, filters, timeout)
