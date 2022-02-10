@@ -72,7 +72,7 @@ class Client():
         return chats
     
     @patchable
-    async def get_administrators(self, chat_id: typing.Union[int, str], has_creator: bool=False) -> typing.List[int]:
+    async def get_chat_administrators(self, chat_id: typing.Union[int, str], has_creator: bool=False) -> typing.List[int]:
         administrators = pyrogram.types.List()
         for administrator in await self.get_chat_members(chat_id, filter="administrators"):
             if has_creator:
@@ -110,7 +110,7 @@ class Client():
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
 pyrogram.sync.async_to_sync(Client, 'get_all_groups')
-pyrogram.sync.async_to_sync(Client, 'get_administrators')
+pyrogram.sync.async_to_sync(Client, 'get_chat_administrators')
 pyrogram.sync.async_to_sync(Client, 'ask')
 pyrogram.sync.async_to_sync(Client, 'listen')
 patch(pyrogram.client.Client)(Client)
@@ -153,7 +153,7 @@ class Chat(pyrogram.types.Chat):
     
     @patchable
     def get_administrators(self, has_creator: bool=False) -> typing.List[int]:
-        return self._client.get_administrators(self.id, has_creator=has_creator)
+        return self._client.get_chat_administrators(self.id, has_creator=has_creator)
     
     @patchable
     def ask(self, text: str,  filters: pyrogram.filters.Filter=None, timeout: str=None, *args, **kwargs):
