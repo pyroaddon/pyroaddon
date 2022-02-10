@@ -11,7 +11,7 @@ IMPORTANT: you should have installed asyncio pyrogram.
 Import `pyroaddon` at least one time in your script, so you'll be able to use modified pyrogram in all files of the same proccess. Example:
 ```python
 # config.py
-import pyroaddon.listen
+import pyroaddon
 from pyrogram import Client
 
 app = Client('my_session')
@@ -21,8 +21,6 @@ app = Client('my_session')
 from config import app
 # no need to import pyroaddon again, pyrogram is already monkeypatched globally (at the same proccess)
 ```
-
-I separated the patches between packages to allow you to import only what you want. The `__init__.py` of each package does the monkeypatch automatically as soon as they are imported (except for `pyroaddon.helpers`, which provides classes and functions that should be explicitely imported).
 
 ### `pyroaddon.listen`
 Just import it, it will automatically do the monkeypatch and you'll get these new methods:
@@ -49,8 +47,6 @@ client = Client(...)
 ### `pyroaddon.filters`
 Import it and the following Update Filters will be monkeypatched to `pyrogram.filters`:
 
-- `filters.dice`
-A dice message.
 - `filters.video_sticker`
 A video sticker message.
 - `filters.ttl_message`
