@@ -20,7 +20,6 @@ along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
 import functools
-from shelve import Shelf
 import pyrogram
 import typing
 
@@ -41,7 +40,7 @@ class Client():
         self.old__init__(*args, **kwargs)
     
     @patchable
-    async def listen(self, chat_id, filters=None, timeout=None):
+    async def listen(self, chat_id: typing.Union[int, str], filters=None, timeout=None):
         if type(chat_id) != int:
             chat = await self.get_chat(chat_id)
             chat_id = chat.id
@@ -62,7 +61,7 @@ class Client():
             if isinstance(chat, pyrogram.raw.types.Channel):
                 if any(getattr(chat, i, False) for i in ('megagroup', 'gigagroup')):
                     chats.append(Chat(
-                        client = Shelf, 
+                        client = self, 
                         id=pyrogram.utils.MAX_CHANNEL_ID - chat.id, 
                         type='supergroup' if chat.megagroup else 
                         'group' if chat.gigagroup else None,
@@ -73,19 +72,27 @@ class Client():
         return chats
     
     @patchable
-    async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
+    async def ask(
+            self, 
+            chat_id: typing.Union[int, str], 
+            text: str, 
+            filters: pyrogram.filters.Filter=None, 
+            timeout: str=None, 
+            *args, 
+            **kwargs
+        ):
         request = await self.send_message(chat_id, text, *args, **kwargs)
         response = await self.listen(chat_id, filters, timeout)
         response.request = request
         return response
-   
+    
     @patchable
-    def clear_listener(self, chat_id, future):
+    def clear_listener(self, chat_id: typing.Union[int, str], future):
         if future == self.listening[chat_id]["future"]:
             self.listening.pop(chat_id, None)
-     
+    
     @patchable
-    def cancel_listener(self, chat_id):
+    def cancel_listener(self, chat_id: typing.Union[int, str]):
         listener = self.listening.get(chat_id)
         if not listener or listener['future'].done():
             return
@@ -105,7 +112,7 @@ class MessageHandler():
         self.old__init__(self.resolve_listener, filters)
     
     @patchable
-    async def resolve_listener(self, client, message, *args):
+    async def resolve_listener(self, client: Client, message: pyrogram.types.Message, *args):
         listener = client.listening.get(message.chat.id)
         if listener and not listener['future'].done():
             listener['future'].set_result(message)
@@ -115,7 +122,7 @@ class MessageHandler():
             await self.user_callback(client, message, *args)
     
     @patchable
-    async def check(self, client, update):
+    async def check(self, client: Client, update: pyrogram.types.Update):
         listener = client.listening.get(update.chat.id)
         
         if listener and not listener['future'].done():
@@ -130,11 +137,13 @@ class MessageHandler():
 @patch(pyrogram.types.user_and_chats.chat.Chat)
 class Chat(pyrogram.types.Chat):
     @patchable
-    def listen(self, *args, **kwargs):
-        return self._client.listen(self.id, *args, **kwargs)
+    def listen(self, filters=None, timeout=None):
+        return self._client.listen(self.id, filters=filters, timeout=timeout)
+    
     @patchable
-    def ask(self, *args, **kwargs):
-        return self._client.ask(self.id, *args, **kwargs)
+    def ask(self, text: str,  filters: pyrogram.filters.Filter=None, timeout: str=None, *args, **kwargs):
+        return self._client.ask(self.id, text=text, filters=filters, timeout=timeout, *args, **kwargs)
+    
     @patchable
     def cancel_listener(self):
         return self._client.cancel_listener(self.id)
@@ -142,11 +151,13 @@ class Chat(pyrogram.types.Chat):
 @patch(pyrogram.types.user_and_chats.user.User)
 class User(pyrogram.types.User):
     @patchable
-    def listen(self, *args, **kwargs):
-        return self._client.listen(self.id, *args, **kwargs)
+    def listen(self, filters: pyrogram.filters.Filter=None, timeout: str=None):
+        return self._client.listen(self.id, filters=filters, timeout=timeout)
+    
     @patchable
-    def ask(self, *args, **kwargs):
-        return self._client.ask(self.id, *args, **kwargs)
+    def ask(self, text: str,  filters: pyrogram.filters.Filter=None, timeout: str=None, *args, **kwargs):
+        return self._client.ask(self.id, text=text, filters=filters, timeout=timeout, *args, **kwargs)
+    
     @patchable
     def cancel_listener(self):
         return self._client.cancel_listener(self.id)
