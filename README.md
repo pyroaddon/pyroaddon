@@ -51,6 +51,10 @@ Import it and the following Update Filters will be monkeypatched to `pyrogram.fi
 
 - `filters.dice`
 A dice message.
+- `filters.video_sticker`
+A video sticker message.
+- `filters.ttl_message`
+A ttl message.
 
 ### `pyroaddon.nav`
 Tools for creating navigation keyboards.

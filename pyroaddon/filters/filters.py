@@ -21,14 +21,14 @@ along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 import pyrogram 
 
 @pyrogram.filters.create
-def dice(_, __, message):
+def dice(_, __, message: pyrogram.types.Message):
     if message.dice:
         return True
     return False
 pyrogram.filters.dice = dice
 
 @pyrogram.filters.create
-async def ttl_message(_, __, m):
+async def ttl_message(_, __, m: pyrogram.types.Message):
     if (m.photo and m.photo.ttl_seconds) or (m.video and m.video.ttl_seconds):
         return True
     return False
