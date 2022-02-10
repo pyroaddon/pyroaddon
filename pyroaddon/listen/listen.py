@@ -152,6 +152,10 @@ class Chat(pyrogram.types.Chat):
         return self._client.listen(self.id, filters=filters, timeout=timeout)
     
     @patchable
+    def get_administrators(self, has_creator: bool=False) -> typing.List[int]:
+        return self._client.get_administrators(self.id, has_creator=has_creator)
+    
+    @patchable
     def ask(self, text: str,  filters: pyrogram.filters.Filter=None, timeout: str=None, *args, **kwargs):
         return self._client.ask(self.id, text=text, filters=filters, timeout=timeout, *args, **kwargs)
     
