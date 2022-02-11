@@ -7,8 +7,6 @@ pyromod on steroids.
 
 pyroaddon works *together* with pyrogram, this is *not* a fork nor modded version. It does monkey patching to add features to Pyrogram classes.
 
-IMPORTANT: you should have installed asyncio pyrogram.
-
 ## Usage
 Import `pyroaddon` at least one time in your script, so you'll be able to use modified pyrogram in all files of the same proccess. Example:
 ```python
