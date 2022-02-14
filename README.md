@@ -35,6 +35,14 @@ Note: `Message.input` will preserve any spaces between the text.
 ### `Client.get_chat_administrators`
 `pyrogram.Client.get_chat_administrators(chat_id, has_creator=False)` will return chat administrators. If `has_creator` is set to _True_, It will also contain the owner. 
 
+### `pyroaddon.filters`
+Import it and the following Update Filters will be monkeypatched to `pyrogram.filters`:
+
+- `filters.video_sticker`
+A video sticker message.
+- `filters.ttl_message`
+A ttl message.
+
 ## Old Features
 ### `pyroaddon.listen`
 Just import it, it will automatically do the monkeypatch and you'll get these new methods:
@@ -57,14 +65,6 @@ client = Client(...)
     answer = await client.ask(chat_id, '*Send me your name:*', parse_mode='Markdown')
     await client.send_message(chat_id, f'Your name is: {answer.text}')    
 ```
-
-### `pyroaddon.filters`
-Import it and the following Update Filters will be monkeypatched to `pyrogram.filters`:
-
-- `filters.video_sticker`
-A video sticker message.
-- `filters.ttl_message`
-A ttl message.
 
 ### `pyroaddon.nav`
 Tools for creating navigation keyboards.
