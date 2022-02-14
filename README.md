@@ -1,11 +1,11 @@
 # pyroaddon
-A monkeypatcher add-on for Pyrogram
+A monkeypatcher add-on for [Pyrogram](https://github.com/pyrogram/pyrogram)
 
 ## Introduction
-pyroaddon is a compilation of utils i developed for extend my personal use of Pyrogram. Then i started to use it and more bots and now i published it to make it easier to be installed in new projects.
-It works *together* with pyrogram, this is *not* a fork nor modded version. It does monkey patching to add features to Pyrogram classes.
+pyroaddon contains the same functionalities as [pyromod](https://github.com/usernein/pyromod) plus some more. So basically it's
+pyromod on steroids.
 
-IMPORTANT: you should have installed asyncio pyrogram.
+pyroaddon works *together* with pyrogram, this is *not* a fork nor modded version. It does monkey patching to add features to Pyrogram classes.
 
 ## Usage
 Import `pyroaddon` at least one time in your script, so you'll be able to use modified pyrogram in all files of the same proccess. Example:
@@ -21,7 +21,29 @@ app = Client('my_session')
 from config import app
 # no need to import pyroaddon again, pyrogram is already monkeypatched globally (at the same proccess)
 ```
+## New Features
+### `Message.input`
+Import pyroaddon to add the property _input_ to `pyrogram.types.Message`. When a message contains a command, `Message.input` will contain the text in front of the command if there are any.
 
+Example: if `/command text in front` is in message.text, Then `Message.input = "text in front"`
+
+Note: `Message.input` will preserve any spaces between the text.
+
+### `Client.get_all_groups`
+`pyrogram.Client.get_all_groups()` will return any group chats that the client is joined in. 
+
+### `Client.get_chat_administrators`
+`pyrogram.Client.get_chat_administrators(chat_id, has_creator=False)` will return chat administrators. If `has_creator` is set to _True_, It will also contain the owner. 
+
+### `pyroaddon.filters`
+Import it and the following Update Filters will be monkeypatched to `pyrogram.filters`:
+
+- `filters.video_sticker`
+A video sticker message.
+- `filters.ttl_message`
+A ttl message.
+
+## Old Features
 ### `pyroaddon.listen`
 Just import it, it will automatically do the monkeypatch and you'll get these new methods:
 - `await pyrogram.Client.listen(chat_id, filters=None, timeout=30)`
@@ -43,14 +65,6 @@ client = Client(...)
     answer = await client.ask(chat_id, '*Send me your name:*', parse_mode='Markdown')
     await client.send_message(chat_id, f'Your name is: {answer.text}')    
 ```
-
-### `pyroaddon.filters`
-Import it and the following Update Filters will be monkeypatched to `pyrogram.filters`:
-
-- `filters.video_sticker`
-A video sticker message.
-- `filters.ttl_message`
-A ttl message.
 
 ### `pyroaddon.nav`
 Tools for creating navigation keyboards.
