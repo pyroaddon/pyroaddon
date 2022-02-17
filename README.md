@@ -29,6 +29,9 @@ Example: if `/command text in front` is in message.text, Then `Message.input = "
 
 Note: `Message.input` will preserve any spaces between the text.
 
+### `Message.delete_in`
+`pyrogram.types.Message.delete_in(seconds, revoke=True)` will delete the message after specified seconds have elapsed
+
 ### `Client.get_all_groups`
 `pyrogram.Client.get_all_groups()` will return any group chats that the client is joined in. 
 
