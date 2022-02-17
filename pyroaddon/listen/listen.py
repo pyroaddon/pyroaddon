@@ -22,6 +22,7 @@ import asyncio
 import functools
 import pyrogram
 import typing
+import re
 
 from ..utils import patch, patchable
 
@@ -30,6 +31,10 @@ loop = asyncio.get_event_loop()
 class ListenerCanceled(Exception):
     pass
 pyrogram.errors.ListenerCanceled = ListenerCanceled
+
+pyrogram.client.Client.USERNAME_LINK_RE = re.compile(
+    '^(?:https?://)?(?:www\\.)?(?:t(?:elegram)?\\.(?:org|me|dog)/)([a-zA-Z0-9_]+)$'
+)
 
 class Client():
     @patchable

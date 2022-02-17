@@ -18,5 +18,5 @@ You should have received a copy of the GNU General Public License
 along with pyroaddon.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 from . import filters, helpers, listen, nav, utils, message
