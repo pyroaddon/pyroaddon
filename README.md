@@ -1,5 +1,17 @@
 # pyroaddon
-A monkeypatcher add-on for [Pyrogram](https://github.com/pyrogram/pyrogram)
+
+
+<p align="center">
+    <a href="https://github.com/pyroaddon/pyroaddon">
+        <img src="https://avatars.githubusercontent.com/u/99355162?v=4" alt="Pyrogram" width="256">
+    </a>
+    <br>
+    <b>A monkeypatcher add-on for <a href="https://github.com/pyrogram/pyrogram">
+        Pyrogram
+    </a></b>
+    <br>
+</p>
+
 
 ## Introduction
 pyroaddon contains the same functionalities as [pyromod](https://github.com/usernein/pyromod) plus some more. So basically it's
