@@ -103,7 +103,7 @@ class Client():
     
     @patchable
     def clear_listener(self, chat_id: typing.Union[int, str], future):
-        if future == self.listening[chat_id]["future"]:
+        if future == self.listening[chat_id]:
             self.listening.pop(chat_id, None)
     
     @patchable
@@ -114,6 +114,7 @@ class Client():
         
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
+
 pyrogram.sync.async_to_sync(Client, 'get_all_groups')
 pyrogram.sync.async_to_sync(Client, 'get_chat_administrators')
 pyrogram.sync.async_to_sync(Client, 'ask')
